@@ -20,6 +20,12 @@ class Login extends Component {
       showProgress: false
     }
   }
+  componentDidMount(){
+    var _isMounted = true;
+  }
+  componentWillUnmount(){
+    _isMounted = false;
+  }
   render(){
     var errorCtrl = <View />;
 
@@ -63,7 +69,10 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password
     }, (results)=> {
+      // console.log(this._isMounted);
+
         this.setState(Object.assign({showProgress: false}, results));
+
 
         if(results.success && this.props.onLogin){
           this.props.onLogin();
