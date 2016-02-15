@@ -7,28 +7,70 @@ import React, {
   TextInput,
   TouchableHighlight,
   Image,
+  ActivityIndicatorIOS,
   View
 } from 'react-native';
 
-var Login = React.createClass({
-  render: function(){
+var buffer = require('buffer');
+
+class Login extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      showProgress: false
+    }
+  }
+  render(){
+    var errorCtrl = <View />;
+
+    if(!this.state.success && this.state.badCredentials){
+      errorCtrl = <Text style={styles.error}>
+        Username or password not valid
+      </Text>;
+    }
+    if(!this.state.success && this.state.unknownError){
+      errorCtrl = <Text style={styles.error}>
+        We experienced an unexpected issue
+      </Text>;
+    }
+
     return(
       <View style={styles.container}>
         <Image style={styles.logo} source={require('image!logo')}/>
         <Text style={styles.heading}>
           Github Browser
         </Text>
-        <TextInput style={styles.input} placeholder="Github username"/>
-        <TextInput style={styles.input} placeholder="Github password" secureTextEntry={true}/>
-        <TouchableHighlight style={styles.button}>
+        <TextInput style={styles.input} placeholder="Github username"
+          onChangeText={(text)=> this.setState({username: text})}/>
+        <TextInput style={styles.input} placeholder="Github password" secureTextEntry={true}
+          onChangeText={(text)=> this.setState({password: text})}/>
+        <TouchableHighlight style={styles.button} onPress={this.onLoginPressed.bind(this)}>
           <Text style={styles.buttonText}>
             Log In
           </Text>
         </TouchableHighlight>
+        {errorCtrl}
+        <ActivityIndicatorIOS animating={this.state.showProgress} size="large"
+          style={styles.loader}/>
       </View>
     );
   }
-});
+  onLoginPressed(){
+    this.setState({showProgress: true});
+
+    var authService = require('./AuthService');
+    authService.login({
+      username: this.state.username,
+      password: this.state.password
+    }, (results)=> {
+        this.setState(Object.assign({showProgress: false}, results));
+
+        if(results.success && this.props.onLogin){
+          this.props.onLogin();
+        }
+    });
+  }
+}
 
 var styles = StyleSheet.create({
   container: {
@@ -65,6 +107,14 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     color: 'white',
     fontSize: 24
+  },
+  loader: {
+    marginTop: 20
+  },
+  error: {
+    color: 'red',
+    fontSize: 15,
+    marginTop: 10
   }
 });
 module.exports = Login;

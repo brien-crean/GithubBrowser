@@ -9,12 +9,24 @@ import React, {
 
 var Login = require('./Login')
 
-class GithubBrowser extends Component {
-  render() {
+var GithubBrowser = React.createClass({
+  render: function() {
     return (
-      <Login />
+      <Login onLogin={this.onLogin}/>
     );
+  },
+  onLogin: function(){
+    this.setState({isLoggedIn: true});
+    console.log("LoggedIn" + this.state.isLoggedIn);
+    if(this.state.isLoggedIn){
+      console.log("Login sucessful => Different View");
+    }
+  },
+  getInitalState: function(){
+    return {
+      isLoggedIn: false
+    }
   }
-}
+});
 
 AppRegistry.registerComponent('GithubBrowser', () => GithubBrowser);
