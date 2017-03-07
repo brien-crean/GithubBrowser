@@ -1,48 +1,44 @@
-'use strict';
-import React, {
-  AppRegistry,
-  Component,
+import React, {Component} from 'react'
+import {
+  ActivityIndicator,
+  Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
-  Image,
-  ActivityIndicatorIOS,
-  View
+  View,
 } from 'react-native';
-
-var buffer = require('buffer');
 
 class Login extends Component {
   constructor(props){
-    super(props);
+    super(props)
     this.state = {
       showProgress: false
     }
   }
   componentDidMount(){
-    var _isMounted = true;
+    var _isMounted = true
   }
   componentWillUnmount(){
-    _isMounted = false;
+    _isMounted = false
   }
   render(){
-    var errorCtrl = <View />;
+    var errorCtrl = <View />
 
     if(!this.state.success && this.state.badCredentials){
       errorCtrl = <Text style={styles.error}>
         Username or password not valid
-      </Text>;
+      </Text>
     }
     if(!this.state.success && this.state.unknownError){
       errorCtrl = <Text style={styles.error}>
         We experienced an unexpected issue
-      </Text>;
+      </Text>
     }
 
     return(
       <View style={styles.container}>
-        <Image style={styles.logo} source={require('image!logo')}/>
+        <Image style={styles.logo} source={require('./images/github_logo.png')}/>
         <Text style={styles.heading}>
           Github Browser
         </Text>
@@ -56,28 +52,29 @@ class Login extends Component {
           </Text>
         </TouchableHighlight>
         {errorCtrl}
-        <ActivityIndicatorIOS animating={this.state.showProgress} size="large"
+        <ActivityIndicator animating={this.state.showProgress} size="large"
           style={styles.loader}/>
       </View>
-    );
+    )
   }
   onLoginPressed(){
-    this.setState({showProgress: true});
+    this.setState({showProgress: true})
 
-    var authService = require('./AuthService');
+    var authService = require('./AuthService')
     authService.login({
       username: this.state.username,
       password: this.state.password
     }, (results)=> {
-      // console.log(this._isMounted);
+      // console.log(this._isMounted)
 
-        this.setState(Object.assign({showProgress: false}, results));
+        this.setState(Object.assign({showProgress: false}, results))
 
 
         if(results.success && this.props.onLogin){
-          this.props.onLogin();
+          console.log("prior to login call")
+          this.props.onLogin()
         }
-    });
+    })
   }
 }
 
@@ -125,5 +122,5 @@ var styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 10
   }
-});
-module.exports = Login;
+})
+export default Login

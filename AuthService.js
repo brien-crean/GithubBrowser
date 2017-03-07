@@ -25,6 +25,7 @@ class AuthService {
       return response.json();
     })
     .then((results)=> {
+      console.log("promise chain success!!!");
       return callbackF({success: true});
     })
     .catch((error)=> {

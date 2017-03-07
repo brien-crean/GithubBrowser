@@ -1,7 +1,6 @@
-'use strict';
-import React, {
+import React, {Component} from 'react'
+import {
   AppRegistry,
-  Component,
   StyleSheet,
   Text,
   TextInput,
@@ -10,38 +9,42 @@ import React, {
   ActivityIndicatorIOS,
   NavigatorIOS,
   View
-} from 'react-native';
+} from 'react-native'
 
-var Login = require('./Login')
+import Login from './Login'
 
 class GithubBrowser extends Component {
   constructor(props){
-    super(props);
+    super(props)
     this.state = {
       isLoggedIn: false
-    };
+    }
   }
   onLogin(){
-    this.setState({isLoggedIn: true});
+    console.log("onLogin called!!")
+    this.setState({isLoggedIn: true})
   }
   componentDidMount(){
-    var _isMounted = true;
+    console.log("DidMount called!!")
+    var _isMounted = true
   }
   componentWillUnmount(){
-    _isMounted = false;
+    _isMounted = false
   }
   render() {
-    console.log("Logged In: " + this.state.isLoggedIn);
+    console.log("Logged In: " + this.state.isLoggedIn)
     if(this.state.isLoggedIn){
+      console.log("You are logged in!!")
       return (
         <View style={styles.container}>
           <Text style={styles.welcome}>Logged in!</Text>
         </View>
-      );
+      )
     }else{
+      console.log("You are NOT logged in!!")
       return (
-        <Login onLogin={this.onLogin} />
-      );
+        <Login onLogin={this.onLogin.bind(this)} />
+      )
     }
   }
 }
@@ -63,6 +66,6 @@ var styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
+})
 
-AppRegistry.registerComponent('GithubBrowser', () => GithubBrowser);
+AppRegistry.registerComponent('GithubBrowser', () => GithubBrowser)
