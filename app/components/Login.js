@@ -1,28 +1,26 @@
 import React, {Component} from 'react'
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native';
-import authService from '../lib/AuthService'
+import { ActivityIndicator, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import actions from '../reducers/rootAction';
 
 class Login extends Component {
+
+  // hide header for Login page
+  static navigationOptions = {
+    header: {
+     visible: false,
+    },
+  };
+
   constructor(props){
     super(props)
     this.state = {
-      showProgress: false
+      showProgress: false,
+      loggedIn: props.loggedIn
     }
   }
-  componentDidMount(){
-    var _isMounted = true
-  }
-  componentWillUnmount(){
-    _isMounted = false
-  }
+
   render(){
     var errorCtrl = <View />
 
@@ -59,21 +57,11 @@ class Login extends Component {
     )
   }
   onLoginPressed(){
-    this.setState({showProgress: true})
-
-    authService.login({
-      username: this.state.username,
-      password: this.state.password
+    this.props.login(
+      { username: this.state.username, password: this.state.password
     }, (results)=> {
-      // console.log(this._isMounted)
-
         this.setState(Object.assign({showProgress: false}, results))
-
-
-        if(results.success && this.props.onLogin){
-          console.log("prior to login call")
-          this.props.onLogin()
-        }
+        this.props.navigation.navigate('ProfileList')
     })
   }
 }
@@ -124,4 +112,17 @@ var styles = StyleSheet.create({
     marginTop: 10
   }
 })
-export default Login
+
+function mapStateToProps(state) {
+  return {
+    loggedIn: state.auth.loggedIn
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+      login: actions.auth.login,
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
