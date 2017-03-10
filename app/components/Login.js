@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
+import authService from '../lib/AuthService'
 
 class Login extends Component {
   constructor(props){
@@ -38,7 +39,7 @@ class Login extends Component {
 
     return(
       <View style={styles.container}>
-        <Image style={styles.logo} source={require('./images/github_logo.png')}/>
+        <Image style={styles.logo} source={require('../assets/images/github_logo.png')}/>
         <Text style={styles.heading}>
           Github Browser
         </Text>
@@ -60,7 +61,6 @@ class Login extends Component {
   onLoginPressed(){
     this.setState({showProgress: true})
 
-    var authService = require('./AuthService')
     authService.login({
       username: this.state.username,
       password: this.state.password
@@ -97,6 +97,7 @@ var styles = StyleSheet.create({
   input: {
     fontSize: 18,
     height: 50,
+    alignSelf: 'stretch',
     marginTop: 10,
     padding: 4,
     borderWidth: 1,
